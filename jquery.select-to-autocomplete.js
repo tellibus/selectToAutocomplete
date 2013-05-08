@@ -22,6 +22,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+http://tellibus.com fork - 16 June 2012
+  • Add the 'position' setting from jQuery UI with a default value
+    (Useful for RTL languages)
+  • Also implemented one of two possible fixes for the z-index problem when used
+    in conjunction with a slider (Cycle Lite plugin at least)
 */
 (function($){
   var settings = {
@@ -38,6 +44,7 @@ THE SOFTWARE.
     'relevancy-sorting-partial-match-value': 1,
     'relevancy-sorting-strict-match-value': 5,
     'relevancy-sorting-booster-attr': 'data-relevancy-booster',
+    'position': { my : "left top", at: "left bottom" },
     handle_invalid_input: function( context ) {
       context.$text_field.val( context.$select_field.find('option:selected:first').text() );
     },
@@ -247,12 +254,21 @@ THE SOFTWARE.
         'minLength': 0,
         'delay': 0,
         'autoFocus': true,
+        'position': context.settings['position'],
         source: function( request, response ) {
           var filtered_options = filter_options( request.term );
           if ( context.settings['relevancy-sorting'] ) {
             filtered_options = filtered_options.sort( function( a, b ) { return b['relevancy-score'] - a['relevancy-score']; } );
           }
           response( filtered_options );
+        },
+        // There is a z-index issue when the plugin is present along with Cycle
+        // plugin in the same page.
+        // Can also be resolved by adding CSS code:
+        // ul.ui-autocomplete{z-index:100 !important}
+        open: function(){
+            $(this).autocomplete('widget').css('z-index', 100);
+            return false;
         },
         select: function( event, ui ) {
           update_select_value( ui.item );
