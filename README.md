@@ -1,7 +1,7 @@
 # Information about this fork #
 [http://tellibus.com/lab/selectToAutocomplete](http://tellibus.com/lab/selectToAutocomplete)
 
-Select To Autocomplete: Redesigned Country Selector
+# Select To Autocomplete: Redesigned Country Selector #
 
 An improved way to select a country in web forms.
 
